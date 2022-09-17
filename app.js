@@ -52,8 +52,7 @@ const Group = mongoose.model("Group", groupSchema);
 app.get("/", function(req, res) {
     User.find({}, function(err, foundUsers){
     res.render("login", {errorMsg: ""});
-    //res.render('login');
-    console.log(foundUsers);
+   // console.log(foundUsers);
     });
 });
 
@@ -138,7 +137,7 @@ app.post("/createGroup", async (req, res) => {
     const newGroup = {
         groupName: newGroupName,
         groupSubject: newGroupSubject,
-        user: newGroupUser
+        user: [newGroupUser]
     };
 
     Group.create(newGroup, function(err) {
@@ -155,7 +154,9 @@ app.post("/createGroup", async (req, res) => {
 
 app.get("/groupCreated", function(req, res) {
     var userCode = firstNameTest.id;
-    User.updateOne({_id : (userCode)}, { $set: {group: groupNameTest.id}}, {upsert: true}, function(err) {
+    var groupCode = groupNameTest.id
+    console.log(firstNameTest);
+    User.updateOne({_id: (userCode)}, { $push: { group: { _id: (groupCode) } } }, { upsert: true }, function(err) {
         if (err) {
             console.log(err);
         } else {
@@ -166,16 +167,17 @@ app.get("/groupCreated", function(req, res) {
     
 })
 
+
 app.get("/joinGroup", async (req, res) => {
     res.render('joinGroup');
-    // const groupId = req.body.groupId;
+    const groupId = req.body.groupId;
 
-    // groupExists =  await Group.findOne({_id: groupId});
-    // if (groupExists) {
-    //     res.send("This probably works")
-    // } else{
-    //     res.send("Didnt work try again")
-    // }
+    groupExists =  await Group.findOne({_id: groupId});
+    if (groupExists) {
+        res.send("This probably works")
+    } else{
+        res.send("Didnt work try again")
+    }
 
 });
 
