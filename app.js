@@ -170,16 +170,32 @@ app.get("/groupCreated", function(req, res) {
 
 app.get("/joinGroup", async (req, res) => {
     res.render('joinGroup');
-    const groupId = req.body.groupId;
-
-    groupExists =  await Group.findOne({_id: groupId});
-    if (groupExists) {
-        res.send("This probably works")
-    } else{
-        res.send("Didnt work try again")
-    }
-
+    var userCode = firstNameTest.id;
 });
+
+app.post("/joinGroup", async (req, res) => {
+    const groupId = (req.body.groupId);
+    var userCode = firstNameTest.id;
+    if (mongoose.Types.ObjectId.isValid(groupId)) {
+    groupExists =  await Group.findOne({_id: (groupId)});
+    console.log(groupExists);
+        if (groupExists) {
+            console.log(userCode + " " + groupId)
+            User.updateOne({_id: (userCode)}, { $push: { group: { _id: (groupId) } } }, { upsert: true }, function(err) {
+                if (err) {
+                    console.log("Did not push group to user")
+                } else {
+                    console.log("did push group for new user")
+                }
+            })
+            res.send("Group exists and is added to user");
+        } else {
+            res.send("Groups does not exist");
+        }
+    } else {
+        res.send("Code is not valid")
+    }
+})
 
 app.listen(3000, function(){
     console.log("Server started on port 3000");
