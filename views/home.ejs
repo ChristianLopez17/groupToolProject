@@ -11,9 +11,12 @@
    <a href="/createGroup">Create new Group</a>
    <a href="/joinGroup">Join new Group</a> 
    <p>Group List</p>
-   <li><a href="group 1"></a>Group1</li>
-   <li><a href="group 1"></a>Group2</li>
-   <li><a href="group 1"></a>Group3</li>
-   <li><a href="group 1"></a>Group4</li>
+
+   <% groupList.forEach(function(item)  { %>
+    
+   <% var newGroupName = item.groupName %> 
+   <% var newGroupId = item._id %> 
+   <li><a href= <%= "/groupHome/" + newGroupId %> %>><%=newGroupName + " | " + newGroupId%></a></li>
+<% }); %>
 </body>
 </html>

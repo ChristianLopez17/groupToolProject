@@ -120,9 +120,46 @@ app.post("/register", async(req, res) => {
 })
 
 app.get("/home", function(req, res) {
-    console.log(firstNameTest);
-    res.render('home', {firstName: firstNameTest, lastName: lastNameTest});
+    console.log(firstNameTest.id);
+    Group.find({user: firstNameTest.id}, function(err, foundItems) {
+        if (err) {
+            console.log("No groups found ")
+        } else {
+            res.render('home', {firstName: firstNameTest, lastName: lastNameTest, groupList: foundItems});
+            console.log(foundItems);
+        }
+    })
 });
+
+// app.post("/home", function (req,res) {
+//     res.redirect("/groupInfo", {groupId: customGroupId});
+// });
+
+
+
+app.get("/groupHome/:customGroupId", async (req, res) => {
+    customGroupId = req.params.customGroupId
+    group = await Group.findOne({_id: customGroupId})
+    User.find({group: customGroupId}, function(err, groupUsers) {
+        if (err) {
+            console.log("Didn't work, there is error")
+        } else {
+            res.render('groupHome', {group: group, groupUsers: groupUsers});
+        }
+    });
+            // console.log(group);
+            // console.log(groupUsers);
+            // // for (const x of userArray) {
+            // //     console.log(userDetails.firstName + " " + userDetails.lastName);
+            // // }
+            // groupUsers.user.forEach( async user => {
+            //      userDetails =  await User.findOne({_id: user});
+            //  });
+
+
+            // res.render('groupHome', {group: group, groupUsers: groupUsers});
+            // // , {groupList: foundItems}
+})
 
 app.get("/createGroup", function(req, res) {
     console.log(firstNameTest.firstName);
@@ -171,16 +208,25 @@ app.get("/groupCreated", function(req, res) {
 app.get("/joinGroup", async (req, res) => {
     res.render('joinGroup');
     var userCode = firstNameTest.id;
+    console.log(userCode);
 });
 
 app.post("/joinGroup", async (req, res) => {
     const groupId = (req.body.groupId);
+    console.log(userCode);
     var userCode = firstNameTest.id;
     if (mongoose.Types.ObjectId.isValid(groupId)) {
     groupExists =  await Group.findOne({_id: (groupId)});
     console.log(groupExists);
         if (groupExists) {
             console.log(userCode + " " + groupId)
+            Group.updateOne({_id: (groupId)}, { $push: { user: { _id: (userCode) } } }, {upsert: true}, function(err) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.log("User is pushed to group")
+                }
+            })
             User.updateOne({_id: (userCode)}, { $push: { group: { _id: (groupId) } } }, { upsert: true }, function(err) {
                 if (err) {
                     console.log("Did not push group to user")
