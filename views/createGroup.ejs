@@ -1,20 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create a Group</title>
-</head>
+<%- include("headerUser") -%>
 <body>
-    <h1>Create a new group</h1>
-    <div class="createGroupForm">
+    <div class="box" id="heading">
+        <h1>Create a new group</h1>
+    </div>
+    <div class="createGroupForm box">
         <form action="/createGroup" method="post">
             <div class="groupName"><label for="groupName">Group Name: </label><input type="text" name="groupName" placeholder="Group Name:" required="true"></div>
             <div class="groupSubject"><label for="groupSubject">Group Subject: </label><input type="text" name="groupSubject" placeholder="Group Subject:" required="true"></div>
             <div class="submitBtn"><button type="submit" name="list">Submit</button></div>       
         </form>
-        <a href="/home">Back</a>
+        <p>Go <a href="/home">Back</a> </p>
     </div>
 </body>
 </html>

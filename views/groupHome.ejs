@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Home</title>
-</head>
+<%- include("headerUser") -%>
 <body>
-    <h1>Welcome to Group: <%=group.groupName %> </h1>
+    <div class="box" id="heading">
+    <h1>Group: <%=group.groupName %> </h1>
+    </div>
+    <div class="box">
     <p>You are in subject: <%=group.groupSubject %> </p>
     <p>Users</p>
 
@@ -16,7 +12,11 @@
     
         <% var userFirstName = user.firstName %> 
         <% var userLastName = user.lastName %> 
-        <li><%=userFirstName + " | " + userLastName%></li>
+        <li><%=userFirstName + " " + userLastName%></li>
      <% }); %>
+
+    </div>
+    <% var newGroupId = groupId %> 
+    <a href= <%="/teamCharter/" + newGroupId %>>Team Charter </a>
 </body>
 </html>

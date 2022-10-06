@@ -1,23 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
+<%- include("header") -%>
 <body>
-    <h1>Register Page </h1>
-        <div class="registerForm">
+    <div class="box" id="heading">
+        <h1>Register Page </h1>
+    </div>
+        <div class="registerForm box">
             <form action="/register" method="post">
-                <div class="firstnameRegister"><label for="firstName">First Name: </label><input type="text" name="firstName" placeholder="First Name:" required="true"></div>
+                <div class="firstnameRegister"><label for="firstName">First Name:   </label><input type="text" name="firstName" placeholder="First Name:" required="true"></div>
                 <div class="lastnameRegister"><label for="lastName">Last Name: </label><input type="text" name="lastName" placeholder="Last Name:" required="true"></div>
                 <div class="emailRegister"><label for="email">Email: </label><input type="text" name="email" placeholder="Email:" required="true"></div>
                 <div class="passwordRegister"><label for="password">Password: <input type="password" name="password" placeholder="Password:" required="true"></label></div>
                 <div class="passwordRegister2"><label for="password">Re-type Password: <input type="password" name="password2" placeholder="Password:" required="true"></label></div>
                 <div class="submitBtn"><button type="submit" name="list">Submit</button></div>       
             </form>
-            <a href="/">Login</a>
+            <p>Already have an account? <a href="/">Login</a> Here!</p>
         </div>
 </body>
 </html>

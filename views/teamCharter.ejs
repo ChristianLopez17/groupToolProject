@@ -1,0 +1,33 @@
+<%- include("headerUser") -%>
+<body>
+    <div class="box" id="heading">
+        <h1>Team Charter</h1>
+    </div>
+
+    <div class="teamCharterBox">
+        <form action= <%= "/teamCharter/" + customGroupId %> method="post">
+            <p><label for="w3review">Team Leader:</label></p>
+
+            <textarea id="w3review" name="w3review" rows="1" cols="50">Insert name and student number of team leader:</textarea>
+                <p><label for="w3review">Responsibilities of group members:</label></p>
+
+            <textarea id="w3review" name="w3review" rows="6" cols="50">Insert the different responsibilities of each member. May include scribe, planner, communicator, etc. These may be changed throughout the semester, however it is better to stick with chosen responsibilities.
+            </textarea>
+                <p><label for="w3review">Form of communication:</label></p>
+
+            <textarea id="w3review" name="w3review" rows="4" cols="50">Can be Microsoft Teams, Messenger, Discord, Zoom Meetings, etc. 
+</textarea>
+                <p><label for="w3review">Organise Meetings:</label></p>
+
+            <textarea id="w3review" name="w3review" rows="6" cols="50">How often will you meet? What day and what time will you meet? Will it be in person or online? What should someone do if they can't attend a meeting? 
+</textarea>
+
+                <p><label for="w3review">Goals for semester:</label></p>
+
+                <textarea id="w3review" name="w3review" rows="6" cols="50">What are your goals for the semester? Do you plan to achieve a pass or a HD? How will you achieve said goals? 
+</textarea>
+
+                <div class="submitBtn"><button type="submit" name="list">Save</button></div>       
+        </form>
+    </div>
+</body>

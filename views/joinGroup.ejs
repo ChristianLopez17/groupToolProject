@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Join a Group</title>
-</head>
+<%- include("headerUser") -%>
 <body>
-    <h1>Join a group</h1>
-    <div class="joinGroupForm">
+    <div class="box" id="heading">
+        <h1>Join a group</h1>
+    </div>
+    <div class="joinGroupForm box">
         <form action="/joinGroup" method="post">
             <div class="groupId"><label for="groupId">Group ID: </label><input type="text" name="groupId" placeholder="Group ID:" required="true"></div>
             <div class="submitBtn"><button type="submit" name="list">Submit</button></div>       
         </form>
-        <a href="/home">Back</a>
+        <p>Go <a href="/home">Back</a> </p>
     </div>
 </body>
 </html>

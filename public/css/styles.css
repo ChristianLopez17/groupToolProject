@@ -1,0 +1,174 @@
+html {
+    background-color: #E4E9FD;
+    background-image: -webkit-linear-gradient(65deg, #A683E3 50%, #E4E9FD 50%);
+    min-height: 1000px;
+    font-family: 'helvetica neue';
+  }
+  
+  h1 {
+    color: #fff;
+    padding: 5px;
+  }
+  
+  .box {
+    max-width: 600px ;
+    margin: 50px auto;
+    background: white;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 200;
+    color: #00204a;
+    text-align: center;
+    box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+  }
+
+  .teamCharterBox {
+    max-width: 800px ;
+    margin: 50px auto;
+    background: white;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 200;
+    color: #00204a;
+    text-align: center;
+    box-shadow: 5px 5px 15px -5px rgba(0, 0, 0, 0.3);
+  }
+  
+  .login {
+    text-align: right;
+    color: #A683E3;
+  }
+
+  .logout {
+    text-align: right;
+    color: white;
+    font-size: 20px;
+    font-weight: 200;
+    padding-right: 20px;
+  }
+
+  #heading {
+    background-color: #A683E3;
+    text-align: center;
+  }
+
+  #title h1 {
+    background-color: transparent;
+    text-align: left;
+    margin-left: 40px;
+    padding-top: 20px;
+    color: #A683E3;
+    border-bottom: #00204a;
+  }
+
+  .title h1 {
+    max-width: 500px auto ;
+    color: orange;
+    border-radius: 40px;
+    margin: auto;
+    text-align: center;
+    border-bottom: #00204a;
+
+  }
+  
+  .item {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #F1F1F1;
+  }
+  
+  .item:last-child {
+    border-bottom: 0;
+  }
+  
+  input:checked+p {
+    text-decoration: line-through;
+    text-decoration-color: #A683E3;
+  }
+  
+  input[type="checkbox"] {
+    margin: 20px;
+  }
+  
+  p {
+    margin: 0;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 200;
+    color: #00204a;
+  }
+  
+  form.item {
+    text-align: center;
+    margin-left: 20px;
+  }
+  
+  button {
+    min-height: 50px;
+    width: 300px;
+    border-radius: 50%;
+    border-color: transparent;
+    background-color: #A683E3;
+    color: #fff;
+    font-size: 30px;
+    margin-top: 10px;
+    border-top: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-width: 0;
+    cursor: pointer;
+  }
+
+  
+  input[type="text"] {
+    text-align: center;
+    height: 60px;
+    top: 10px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    font-weight: 200;
+    width: 313px;
+    padding-top: 20px;
+  }
+  
+  input[type="text"]:focus {
+    outline: none;
+    box-shadow: inset 0 -3px 0 0 #A683E3;
+  }
+
+  input[type="password"] {
+    text-align: center;
+    height: 60px;
+    top: 10px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    font-weight: 200;
+    width: 313px;
+    padding-bottom: 10px;
+  }
+  
+  input[type="password"]:focus {
+    outline: none;
+    box-shadow: inset 0 -3px 0 0 #A683E3;
+  }
+  
+  ::placeholder {
+    color: grey;
+    opacity: 1;
+  }
+  
+  footer {
+    color: white;
+    color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+
+  textarea {
+    resize: none;
+  }
+
+
+  

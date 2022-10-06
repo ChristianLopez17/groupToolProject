@@ -31,8 +31,18 @@ const groupSchema = {
     user: [{ type: mongoose.Types.ObjectId, ref: 'User'}]
 }
 
+const teamCharterSchema = {
+    groupId: [{ type: mongoose.Types.ObjectId, red: 'Group'}],
+    groupLeader: String,
+    groupResponsibilities: String,
+    groupCommunication: String,
+    groupMeeting: String,
+    groupGoals: String,
+}
+
 const User = mongoose.model("User", usersSchema);
 const Group = mongoose.model("Group", groupSchema);
+const TeamCharter = mongoose.model("TeamCharter", teamCharterSchema)
 
 // const user1 = {
 //     firstName: "Christian",
@@ -144,7 +154,7 @@ app.get("/groupHome/:customGroupId", async (req, res) => {
         if (err) {
             console.log("Didn't work, there is error")
         } else {
-            res.render('groupHome', {group: group, groupUsers: groupUsers});
+            res.render('groupHome', {group: group, groupUsers: groupUsers, firstName: firstNameTest, lastName: lastNameTest, groupId: customGroupId});
         }
     });
             // console.log(group);
@@ -161,9 +171,21 @@ app.get("/groupHome/:customGroupId", async (req, res) => {
             // // , {groupList: foundItems}
 })
 
+
+app.get("/teamCharter/:customGroupId", async (req, res) => {
+    customGroupId = req.params.customGroupId
+    res.render('teamCharter', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId});
+})
+
+app.post("/teamCharter/:customGroupId", async (req, res) => {
+    customGroupId = req.params.customGroupId;
+    console.log(customGroupId);
+    res.redirect("/groupHome/" + customGroupId);
+})
+
 app.get("/createGroup", function(req, res) {
     console.log(firstNameTest.firstName);
-    res.render('createGroup');
+    res.render('createGroup', {firstName: firstNameTest, lastName: lastNameTest});
 });
 
 app.post("/createGroup", async (req, res) => {
@@ -206,7 +228,7 @@ app.get("/groupCreated", function(req, res) {
 
 
 app.get("/joinGroup", async (req, res) => {
-    res.render('joinGroup');
+    res.render('joinGroup', {firstName: firstNameTest, lastName: lastNameTest});
     var userCode = firstNameTest.id;
     console.log(userCode);
 });
