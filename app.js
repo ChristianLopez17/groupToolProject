@@ -180,6 +180,12 @@ app.get("/teamCharter/:customGroupId", async (req, res) => {
 app.post("/teamCharter/:customGroupId", async (req, res) => {
     customGroupId = req.params.customGroupId;
     console.log(customGroupId);
+    groupLeader = req.body.groupLeader;
+    groupResponsibilities = req.body.groupResponsibilities;
+    groupCommunication = req.body.groupCommunication;
+    groupMeeting = req.body.groupMeeting;
+    groupGoals = req.body.groupMeeting;
+
     res.redirect("/groupHome/" + customGroupId);
 })
 
@@ -213,8 +219,9 @@ app.post("/createGroup", async (req, res) => {
 
 app.get("/groupCreated", function(req, res) {
     var userCode = firstNameTest.id;
-    var groupCode = groupNameTest.id
+    var groupCode = groupNameTest.id;
     console.log(firstNameTest);
+    console.log(groupCode);
     User.updateOne({_id: (userCode)}, { $push: { group: { _id: (groupCode) } } }, { upsert: true }, function(err) {
         if (err) {
             console.log(err);
@@ -222,6 +229,7 @@ app.get("/groupCreated", function(req, res) {
             console.log("Successfully assigned group to user");
         }
     });
+    //TeamCharter.insert({groupId: groupCode});
     res.render('groupCreated', {groupName: groupNameTest.id});
     
 })
