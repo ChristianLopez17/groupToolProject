@@ -44,6 +44,8 @@ const User = mongoose.model("User", usersSchema);
 const Group = mongoose.model("Group", groupSchema);
 const TeamCharter = mongoose.model("TeamCharter", teamCharterSchema)
 
+
+
 // const user1 = {
 //     firstName: "Christian",
 //     lastName: "Lopez",
@@ -136,7 +138,6 @@ app.get("/home", function(req, res) {
             console.log("No groups found ")
         } else {
             res.render('home', {firstName: firstNameTest, lastName: lastNameTest, groupList: foundItems});
-            console.log(foundItems);
         }
     })
 });
@@ -171,10 +172,27 @@ app.get("/groupHome/:customGroupId", async (req, res) => {
             // // , {groupList: foundItems}
 })
 
+app.get("/peerReview/:customGroupId", async (req, res) => {
+    customGroupId = req.params.customGroupId
+    teamCharter = await TeamCharter.findOne({groupId: customGroupId});
+    console.log(teamCharter);
+    group = await Group.findOne({_id: customGroupId})
+    User.find({group: customGroupId}, function(err, groupUsers) {
+        if (err) {
+            console.log("Didn't work, there is error")
+        } else {
+            res.render('peerReview', {group: group, groupUsers: groupUsers, firstName: firstNameTest, lastName: lastNameTest, groupId: customGroupId});
+        }
+    });
+    //res.render('peerReview', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId});
+})
+
 
 app.get("/teamCharter/:customGroupId", async (req, res) => {
     customGroupId = req.params.customGroupId
-    res.render('teamCharter', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId});
+    teamCharter = await TeamCharter.findOne({groupId: customGroupId});
+    console.log(teamCharter);
+    res.render('teamCharter', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId, teamCharter: teamCharter});
 })
 
 app.post("/teamCharter/:customGroupId", async (req, res) => {
@@ -184,10 +202,21 @@ app.post("/teamCharter/:customGroupId", async (req, res) => {
     groupResponsibilities = req.body.groupResponsibilities;
     groupCommunication = req.body.groupCommunication;
     groupMeeting = req.body.groupMeeting;
-    groupGoals = req.body.groupMeeting;
+    groupGoals = req.body.groupGoals;
+  //  Group.updateOne({_id: (groupId)}, { $push: { user: { _id: (userCode) } } }
+
+    TeamCharter.updateOne({groupId: (customGroupId)}, {$set: {groupLeader: groupLeader, groupResponsibilities: groupResponsibilities,
+    groupCommunication: groupCommunication, groupMeeting: groupMeeting, groupGoals: groupGoals}}, { upsert: true }, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Successfylly updated team charter");
+    }});
 
     res.redirect("/groupHome/" + customGroupId);
-})
+});
+
+
 
 app.get("/createGroup", function(req, res) {
     console.log(firstNameTest.firstName);
@@ -204,33 +233,44 @@ app.post("/createGroup", async (req, res) => {
         groupSubject: newGroupSubject,
         user: [newGroupUser]
     };
-
+    
     Group.create(newGroup, function(err) {
         if (err) {
             console.log(err);
         } else {
             console.log("Successfully added group into database");
+            console.log("group id is" + newGroup.insertedId);
         }
     })
-    groupNameTest = await Group.findOne({groupName: newGroupName}, "groupName");
-    //console.log(groupNameTest.id);
-    res.redirect('/groupCreated');
+    groupNameTest = await Group.findOne({groupName: newGroupName, groupSubject: newGroupSubject}, "groupName");
+    res.redirect('/groupCreated')
+    
 })
 
 app.get("/groupCreated", function(req, res) {
     var userCode = firstNameTest.id;
     var groupCode = groupNameTest.id;
     console.log(firstNameTest);
-    console.log(groupCode);
+    console.log("groupCode from the groupcreated page is " + groupCode);
     User.updateOne({_id: (userCode)}, { $push: { group: { _id: (groupCode) } } }, { upsert: true }, function(err) {
         if (err) {
             console.log(err);
         } else {
             console.log("Successfully assigned group to user");
         }
+
+        // const defualtTeamCharter = {
+        //     groupId: groupCode,
+        //     groupLeader: "Insert name and student ID of group leader", 
+        //     groupResponsibilities: "Insert the different responsibilities of each member. May include scribe, planner, communicator, etc. These may be changed throughout the semester, however it is better to stick with chosen responsibilities.",
+        //     groupCommunication: "Can be Microsoft Teams, Messenger, Discord, Zoom Meetings, etc. ", 
+        //     groupMeeting: "How often will you meet? What day and what time will you meet? Will it be in person or online? What should someone do if they can't attend a meeting?",
+        //     groupGoals: "What are your goals for the semester? Do you plan to achieve a pass or a HD? How will you achieve said goals?"
+        // }
+        TeamCharter.create({groupId: groupCode, groupLeader: ""});
     });
     //TeamCharter.insert({groupId: groupCode});
-    res.render('groupCreated', {groupName: groupNameTest.id});
+    res.render('groupCreated', {groupName: groupNameTest.id, firstName: firstNameTest, lastName: lastNameTest});
     
 })
 

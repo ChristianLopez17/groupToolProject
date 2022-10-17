@@ -1,0 +1,52 @@
+<%- include("headerUser") -%>
+
+<div class="box" id="heading">
+    <h1>Peer Review</h1>
+</div>
+
+<div class="box">
+            <label for="membership">Choose Group Member to review:</label>
+            <div class="dropdown">
+                <button>Select Person</button>
+                <div class="dropdown-content">
+                    <% groupUsers.forEach(function(user)  { %>
+                        <% var userFirstName = user.firstName %> 
+                        <% var userLastName = user.lastName %> 
+                        <% var userId = user._id %> 
+                        <a href= <%="/peerReview/" + customGroupId + "/" + userId %>><%=userFirstName + " " + userLastName %></a>
+                    <% }); %>
+                </div>
+              </div>
+
+</div>
+
+<div class="box">
+
+    <form action="/"></form>
+    <label for="">Form</label>
+
+    <p>Evaluation 1</p>
+    <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      </div>
+      <p>Evaluation 2</p>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      </div>
+      <p>Evaluation 3</p>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      </div>    
+      <p>Evaluation 4</p>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      </div>
+
+      <p><label for="w3review">Comments</label></p>
+
+     <textarea id="w3review" name="groupGoals" rows="6" cols="50" placeholder="Add Comments"></textarea>
+
+        <div class="submitBtn"><button type="submit" name="list">Save</button></div>      
+    </form>
+
+</div>
