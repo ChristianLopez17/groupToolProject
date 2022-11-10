@@ -1,9 +1,10 @@
 <%- include("header") -%>
 <body>
     <div class="box" id="heading">
-        <h1>Register Page </h1>
+        <h1>Register</h1>
     </div>
         <div class="registerForm box">
+            <label><%= errorMsg %> </label>
             <form action="/register" method="post">
                 <div class="firstnameRegister"><label for="firstName">First Name:   </label><input type="text" name="firstName" placeholder="First Name:" required="true"></div>
                 <div class="lastnameRegister"><label for="lastName">Last Name: </label><input type="text" name="lastName" placeholder="Last Name:" required="true"></div>

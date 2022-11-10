@@ -1,0 +1,83 @@
+<%- include("headerUser") -%>
+
+<div class="box" id="heading">
+    <h1>Peer Review</h1>
+</div>
+
+<div class="box">
+            <label for="membership">Choose Group Member to review:</label>
+            <div class="dropdown">
+                <button><%= user.firstName %> <%= user.lastName %></button>
+                <div class="dropdown-content">
+                    <% groupUsers.forEach(function(user)  { %>
+                        <% var userFirstName = user.firstName %> 
+                        <% var userLastName = user.lastName %> 
+                        <% var userId = user._id %> 
+                        <a href= <%="/peerReview/" + customGroupId + "/" + userId %>><%=userFirstName + " " + userLastName %></a>
+                    <% }); %>
+                </div>
+              </div>
+
+</div>
+
+<div class="box">
+
+    <form action= <%="/peerReview/" + customGroupId + "/" + userId%> method="post">
+    <label for="">Evaluating ID:</label>
+
+    <input type="text" name="receiverId" readonly="true" value=<%= userId._id %>>
+
+    <p>Rate the person's effort in this class</p>
+        <select class="dropbtn" data-style="btn-ifwnfo" name="evaluation1">
+            <optgroup label="Rate 1-5">
+                <option name="storedValue" value="<%= peerReview.evaluation1 %>"><%= peerReview.evaluation1 %></option>
+                <option name="table1" value="1">1</option>
+                <option name="table2" value="2">2</option>
+                <option name="table3" value="3">3</option>
+                <option name="table3" value="4">4</option>
+                <option name="table3" value="5">5</option>
+            </optgroup>
+        </select>
+      <p>Rate the person's organisation in this class</p>
+      <select class="dropbtn" data-style="btn-ifwnfo" name="evaluation2">
+        <optgroup label="Rate 1-5">
+            <option name="storedValue" value="<%= peerReview.evaluation2 %>"><%= peerReview.evaluation2 %></option>
+            <option name="table1" value="1">1</option>
+            <option name="table2" value="2">2</option>
+            <option name="table3" value="3">3</option>
+            <option name="table3" value="4">4</option>
+            <option name="table3" value="5">5</option>
+        </optgroup>
+    </select>
+      <p>Rate the person's collaborative skills</p>
+      <select class="dropbtn" data-style="btn-ifwnfo" name="evaluation3" >
+        <optgroup label="Rate 1-5">
+            <option name="storedValue" value="<%= peerReview.evaluation3 %>"><%= peerReview.evaluation3 %></option>
+            <option name="table1" value="1">1</option>
+            <option name="table2" value="2">2</option>
+            <option name="table3" value="3">3</option>
+            <option name="table3" value="4">4</option>
+            <option name="table3" value="5">5</option>
+        </optgroup>
+    </select>  
+      <p>Rate the person's participation</p>
+      <select class="dropbtn" data-style="btn-ifwnfo" name="evaluation4">
+        <optgroup label="Rate 1-5">
+            <option name="storedValue" value="<%= peerReview.evaluation4 %>"><%= peerReview.evaluation4 %></option>
+            <option name="table1" value="1">1</option>
+            <option name="table2" value="2">2</option>
+            <option name="table3" value="3">3</option>
+            <option name="table3" value="4">4</option>
+            <option name="table3" value="5">5</option>
+        </optgroup>
+    </select>
+
+      <p><label for="w3review">Comments</label></p>
+
+     <textarea id="w3review" name="comments" rows="6" cols="50" placeholder="Add Comments" required="true"><%= peerReview.comments %></textarea>
+
+        <div class="submitBtn"><button type="submit" name="list">Save</button></div>      
+    </form>
+    <div class="box"><a href="/home" ><button>Finish peer review</button></a></div>
+
+</div>

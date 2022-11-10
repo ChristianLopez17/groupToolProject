@@ -1,22 +1,23 @@
 <%- include("headerUser") -%>
 <body>
     <div class="box" id="heading">
-        <h1>Welcome <%= firstName.firstName %> <%= lastName.lastName %></h1>
+        <h1>Homepage</h1>
     </div>
     <div class="box">
-   <a href="/createGroup">Create new Group</a>
-   <a href="/joinGroup">Join new Group</a> 
+   <a href="/createGroup"> <button>Create new Group</button></a>
+   <a href="/joinGroup"><button>Join new Group</button></a> 
 
     </div>
 
     <div class="box">
-   <p>Group List</p>
+   <h2>Group List</h2>
 
    <% groupList.forEach(function(item)  { %>
     
    <% var newGroupName = item.groupName %> 
    <% var newGroupId = item._id %> 
-   <li><a href= <%= "/groupHome/" + newGroupId %> %>><%=newGroupName + " | " + newGroupId%></a></li>
+   <% var newGroupSubject = item.groupSubject %>
+   <li><a href= <%= "/groupHome/" + newGroupId %>%>> <div class="groupButton"> <%=newGroupName + " ~ " + newGroupSubject%> </a> </div></li>
 <% }); %>
 </div>
 

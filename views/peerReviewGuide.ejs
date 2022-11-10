@@ -1,0 +1,36 @@
+<%- include("headerUser") -%>
+
+<div class="box" id="heading">
+    <h1>Peer Review Guide</h1>
+</div>
+
+<div class="box">
+    <form action="peerReviewGuide" method="post">
+        <label>You will be reviewing: </label>
+        <%= userFullName = userId.firstName + " " + userId.lastName %>
+        <input type="text" name="receiverId" readonly="true" value=<%= userId._id%>>
+
+    
+    <p>Rate Person based on question from 1-5</p>
+    <p>1 = Lowest</p>
+    <p>5 = Highest</p>
+    <p>Think carefully about ratings as they may affect marks</p>
+    <select class="dropbtn" data-style="btn-ifwnfo" name="evaluation1">
+        <optgroup label="Rate 1-5">
+            <option name="table1" value="1">1</option>
+            <option name="table2" value="2">2</option>
+            <option name="table3" value="3">3</option>
+            <option name="table3" value="4">4</option>
+            <option name="table3" value="5">5</option>
+        </optgroup>
+    </select>
+
+    <p>Comments are required. Please add either constructive criticisms or praises to group members. The more you write the better! These will be approved by tutors and may be sent out to students.</p>
+    <p><label for="w3review">Comments</label></p>
+
+    <textarea id="w3review" name="comments" rows="6" cols="50" placeholder="Add Comments"></textarea>
+    <div class="submitBtn"><button type="submit" name="list">Proceed</button></div>
+</div>
+
+
+</form>

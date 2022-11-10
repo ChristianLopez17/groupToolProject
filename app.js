@@ -2,20 +2,26 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const passportLocalMongoose = require("passport-local-mongoose");
+const jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+global.document = new JSDOM().window.document;
 
 const app = express();
+
  
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/groupToolDB", {useNewUrlParser:true});
+mongoose.connect("mongodb+srv://admin-clopez:Test-123@groupifycluster.pels3cu.mongodb.net/groupToolDB", {useNewUrlParser:true});
 
 var firstNameTest = "";
 var lastNameTest = "";
 var userID = "";
 var groupNameTest = "";
+
+//------------------------------ Schemas for Mongo DB ------------------------------------------
 
 const usersSchema = {
     firstName: String,
@@ -40,26 +46,25 @@ const teamCharterSchema = {
     groupGoals: String,
 }
 
+const peerEvaluationSchema = {
+    markerId: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
+    receiverId: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
+    groupId: [{ type: mongoose.Types.ObjectId, red: 'Group'}], 
+    evaluation1: Number, 
+    evaluation2: Number, 
+    evaluation3: Number, 
+    evaluation4: Number,
+    comments: String, 
+}
+
+//------------------------------ Initialising Schemas for JS use ------------------------------------------
+
 const User = mongoose.model("User", usersSchema);
 const Group = mongoose.model("Group", groupSchema);
 const TeamCharter = mongoose.model("TeamCharter", teamCharterSchema)
+const PeerEvaluation = mongoose.model("PeerEvaluation", peerEvaluationSchema)
 
-
-
-// const user1 = {
-//     firstName: "Christian",
-//     lastName: "Lopez",
-//     email: "lopezchristian1711@gmail.com",
-//     password: "ChristianLopez123"
-// };
-
-// User.create(user1, function (err) {
-//     if (err) {
-//         console.log(err);
-//     } else {
-//         console.log("Successfully added into database");
-//     }
-// })
+//------------------------------------ Initial Page: Login -------------------------------------------------
 
 app.get("/", function(req, res) {
     User.find({}, function(err, foundUsers){
@@ -91,8 +96,10 @@ app.post("/", async(req, res) => {
     }
 })
 
+//------------------------------------ Register Pages GET/POST -------------------------------------------------
+
 app.get("/register", function(req, res) {
-    res.render('register');
+    res.render('register', {errorMsg: ""});
 });
 
 app.post("/register", async(req, res) => {
@@ -107,7 +114,7 @@ app.post("/register", async(req, res) => {
         if (newPassword === newPassword2) {
         if (emailTaken) {
             console.log("email is taken");
-            res.render('register', {errorMsg: "Email is incorrect"});
+            res.render('register', {errorMsg: "Account already created with email"});
         } else {
             const newUser = {
                 firstName: newFirstname,
@@ -123,13 +130,20 @@ app.post("/register", async(req, res) => {
                 }
             })
         }
-        res.redirect("/")
+        res.render("registerSuccess");
     } else {
-        res.render('Register');
-        console.log("Password does not match");
+        res.render('Register', {errorMsg: "Passwords do not match"});
     }
 
+});
+
+//------------------------------------ Successful Registration page -------------------------------------------------
+
+app.get("/registerSuccess", function (req,res) {
+    res.render('registerSuccess');
 })
+
+//------------------------------------ Home Page -------------------------------------------------
 
 app.get("/home", function(req, res) {
     console.log(firstNameTest.id);
@@ -142,11 +156,7 @@ app.get("/home", function(req, res) {
     })
 });
 
-// app.post("/home", function (req,res) {
-//     res.redirect("/groupInfo", {groupId: customGroupId});
-// });
-
-
+//------------------------------------ Group Home Page with group ID -------------------------------------------------
 
 app.get("/groupHome/:customGroupId", async (req, res) => {
     customGroupId = req.params.customGroupId
@@ -172,51 +182,7 @@ app.get("/groupHome/:customGroupId", async (req, res) => {
             // // , {groupList: foundItems}
 })
 
-app.get("/peerReview/:customGroupId", async (req, res) => {
-    customGroupId = req.params.customGroupId
-    teamCharter = await TeamCharter.findOne({groupId: customGroupId});
-    console.log(teamCharter);
-    group = await Group.findOne({_id: customGroupId})
-    User.find({group: customGroupId}, function(err, groupUsers) {
-        if (err) {
-            console.log("Didn't work, there is error")
-        } else {
-            res.render('peerReview', {group: group, groupUsers: groupUsers, firstName: firstNameTest, lastName: lastNameTest, groupId: customGroupId});
-        }
-    });
-    //res.render('peerReview', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId});
-})
-
-
-app.get("/teamCharter/:customGroupId", async (req, res) => {
-    customGroupId = req.params.customGroupId
-    teamCharter = await TeamCharter.findOne({groupId: customGroupId});
-    console.log(teamCharter);
-    res.render('teamCharter', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId, teamCharter: teamCharter});
-})
-
-app.post("/teamCharter/:customGroupId", async (req, res) => {
-    customGroupId = req.params.customGroupId;
-    console.log(customGroupId);
-    groupLeader = req.body.groupLeader;
-    groupResponsibilities = req.body.groupResponsibilities;
-    groupCommunication = req.body.groupCommunication;
-    groupMeeting = req.body.groupMeeting;
-    groupGoals = req.body.groupGoals;
-  //  Group.updateOne({_id: (groupId)}, { $push: { user: { _id: (userCode) } } }
-
-    TeamCharter.updateOne({groupId: (customGroupId)}, {$set: {groupLeader: groupLeader, groupResponsibilities: groupResponsibilities,
-    groupCommunication: groupCommunication, groupMeeting: groupMeeting, groupGoals: groupGoals}}, { upsert: true }, function(err) {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log("Successfylly updated team charter");
-    }});
-
-    res.redirect("/groupHome/" + customGroupId);
-});
-
-
+//------------------------------------ Create group page -------------------------------------------------
 
 app.get("/createGroup", function(req, res) {
     console.log(firstNameTest.firstName);
@@ -239,13 +205,15 @@ app.post("/createGroup", async (req, res) => {
             console.log(err);
         } else {
             console.log("Successfully added group into database");
-            console.log("group id is" + newGroup.insertedId);
+            console.log("group id is" + newGroup._id);
         }
     })
     groupNameTest = await Group.findOne({groupName: newGroupName, groupSubject: newGroupSubject}, "groupName");
     res.redirect('/groupCreated')
     
 })
+
+//------------------------------------ Successfully created group page -------------------------------------------------
 
 app.get("/groupCreated", function(req, res) {
     var userCode = firstNameTest.id;
@@ -258,15 +226,6 @@ app.get("/groupCreated", function(req, res) {
         } else {
             console.log("Successfully assigned group to user");
         }
-
-        // const defualtTeamCharter = {
-        //     groupId: groupCode,
-        //     groupLeader: "Insert name and student ID of group leader", 
-        //     groupResponsibilities: "Insert the different responsibilities of each member. May include scribe, planner, communicator, etc. These may be changed throughout the semester, however it is better to stick with chosen responsibilities.",
-        //     groupCommunication: "Can be Microsoft Teams, Messenger, Discord, Zoom Meetings, etc. ", 
-        //     groupMeeting: "How often will you meet? What day and what time will you meet? Will it be in person or online? What should someone do if they can't attend a meeting?",
-        //     groupGoals: "What are your goals for the semester? Do you plan to achieve a pass or a HD? How will you achieve said goals?"
-        // }
         TeamCharter.create({groupId: groupCode, groupLeader: ""});
     });
     //TeamCharter.insert({groupId: groupCode});
@@ -274,6 +233,7 @@ app.get("/groupCreated", function(req, res) {
     
 })
 
+//------------------------------------ Join Group Page -------------------------------------------------
 
 app.get("/joinGroup", async (req, res) => {
     res.render('joinGroup', {firstName: firstNameTest, lastName: lastNameTest});
@@ -304,14 +264,161 @@ app.post("/joinGroup", async (req, res) => {
                     console.log("did push group for new user")
                 }
             })
-            res.send("Group exists and is added to user");
+            res.render('joinGroupSuccess', ({groupName: groupExists, firstName: firstNameTest, lastName: lastNameTest}))
         } else {
-            res.send("Groups does not exist");
+            res.render('joinGroupFailure', ({firstName: firstNameTest, lastName: lastNameTest}));
         }
     } else {
-        res.send("Code is not valid")
+        res.render('joinGroupFailure', ({firstName: firstNameTest, lastName: lastNameTest}));
     }
 })
+
+//------------------------------------ Group Peer Review Page: Blank page -------------------------------------------------
+
+app.get("/peerReview/:customGroupId", async (req, res) => {
+    customGroupId = req.params.customGroupId
+    group = await Group.findOne({_id: customGroupId})
+    User.find({group: customGroupId}, function(err, groupUsers) {
+        if (err) {
+            console.log("Didn't work, there is error")
+        } else {
+            res.render('peerReview', {group: group, groupUsers: groupUsers, firstName: firstNameTest, lastName: lastNameTest, groupId: customGroupId});
+        }
+    });
+ 
+    //res.render('peerReview', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId});
+});
+
+//------------------------------------ Group Peer Review Page: Specificed Page -------------------------------------------------
+
+app.get("/peerReview/:customGroupId/:userId", async (req,res) => {
+    customGroupId = req.params.customGroupId;
+    userId = req.params.userId;
+    receiverUserId = req.body.receiverId;
+    markerUserId = firstNameTest.id;
+    console.log("Receiver Id: " + userId)
+    group = await Group.findOne({_id: customGroupId});
+    user = await User.findOne({_id: userId});
+    peerReviewExists = await PeerEvaluation.findOne({groupId: customGroupId,  markerId: markerUserId, receiverId: userId})
+    if (peerReviewExists) {
+        User.find({group: customGroupId}, function(err, groupUsers) {
+            if (err) {
+                console.log("Didn't work, there is error")
+            } else {
+                res.render('peerReviewUser', {group: group, groupUsers: groupUsers, firstName: firstNameTest, lastName: lastNameTest, groupId: customGroupId, userId: user, peerReview: peerReviewExists});
+            }
+        });
+    } else {
+        await PeerEvaluation.create({groupId: customGroupId, markerId: markerUserId, receiverId: userId, evaluation1: 1, evaluation2: 1, evaluation3: 1, evaluation4: 1, comments: ""});
+        User.find({group: customGroupId}, function(err, groupUsers) {
+            if (err) {
+                console.log("Didn't work, there is error")
+            } else {
+                res.render('peerReviewGuide', {group: group, groupUsers: groupUsers, firstName: firstNameTest, lastName: lastNameTest, groupId: customGroupId, userId: user});
+                }
+        });
+    }
+    
+})
+
+app.post("/peerReview/:customGroupId/:userId", async (req,res) => {
+    customGroupId = req.params.customGroupId;
+    markerUserId = firstNameTest.id;
+    receiverUserId = req.body.receiverId;
+    evaluation1 = req.body.evaluation1;
+    evaluation2 = req.body.evaluation2;
+    evaluation3 = req.body.evaluation3;
+    evaluation4 = req.body.evaluation4
+    comments =req.body.comments;
+
+    const newPeerReview = {
+    markerId: [markerUserId],
+    receiverId: [receiverUserId],
+    groupId: [customGroupId], 
+    evaluation1: evaluation1, 
+    evaluation2: evaluation2, 
+    evaluation3: evaluation3, 
+    evaluation4: evaluation4,
+    comments: comments, 
+    }
+
+    //peerEvaluation = await PeerEvaluation.findOne({groupId: customGroupId, markerId: markerUserId, receiverId: receiverUserId});
+    console.log("Group Id: " + customGroupId);
+    console.log("Marker Id: " + markerUserId);
+    console.log("Receiver Id: " + receiverUserId);
+
+
+    peerReviewExists = await PeerEvaluation.findOne({groupId: customGroupId, markerId: markerUserId, receiverId: receiverUserId}, "_id")
+    console.log(peerReviewExists);
+    peerReviewId = peerReviewExists._id;
+    console.log(peerReviewId)
+
+    
+    if (peerReviewExists) {
+        PeerEvaluation.updateOne({_id: (peerReviewExists)}, {$set: {evaluation1: evaluation1, evaluation2: evaluation2, evaluation3: evaluation3, evaluation4: evaluation4, comments: comments}}, {upsert: true}, function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("Successfylly updated peer review");
+        }}); 
+    }
+    else {
+        PeerEvaluation.create(newPeerReview, function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("Successfully added peer evaluation into database");
+            }
+        });
+    }
+    res.redirect('/peerReview/' + customGroupId + '/' + userId);
+    
+})
+
+//------------------------------------ Group Peer Review Guidance Page -------------------------------------------------
+
+
+app.get("/peerReviewGuide", function(req,res) {
+    res.render('peerReviewGuide');
+}) 
+
+app.post("/peerReviewGuide", function(req, res) {
+    customGroupId = req.params.customGroupId;
+    receiverUserId = req.body.receiverId;
+    res.redirect('/peerReviewGuide' + customGroupId + '/' + receiverUserId);
+})
+
+//------------------------------------ Group Team Charter Page -------------------------------------------------
+
+
+app.get("/teamCharter/:customGroupId", async (req, res) => {
+    customGroupId = req.params.customGroupId
+    teamCharter = await TeamCharter.findOne({groupId: customGroupId});
+    console.log(teamCharter);
+    res.render('teamCharter', {firstName: firstNameTest, lastName: lastNameTest, customGroupId: customGroupId, teamCharter: teamCharter});
+})
+
+app.post("/teamCharter/:customGroupId", async (req, res) => {
+    customGroupId = req.params.customGroupId;
+    console.log(customGroupId);
+    groupLeader = req.body.groupLeader;
+    groupResponsibilities = req.body.groupResponsibilities;
+    groupCommunication = req.body.groupCommunication;
+    groupMeeting = req.body.groupMeeting;
+    groupGoals = req.body.groupGoals;
+  //  Group.updateOne({_id: (groupId)}, { $push: { user: { _id: (userCode) } } }
+
+    TeamCharter.updateOne({groupId: (customGroupId)}, {$set: {groupLeader: groupLeader, groupResponsibilities: groupResponsibilities,
+    groupCommunication: groupCommunication, groupMeeting: groupMeeting, groupGoals: groupGoals}}, { upsert: true }, function(err) {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Successfylly updated team charter");
+    }});
+
+    res.redirect("/groupHome/" + customGroupId);
+});
+
 
 app.listen(3000, function(){
     console.log("Server started on port 3000");
